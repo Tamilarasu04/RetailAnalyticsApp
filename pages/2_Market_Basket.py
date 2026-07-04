@@ -20,7 +20,7 @@ if "uploaded_df" not in st.session_state:
     st.session_state["uploaded_df"] = df
     st.session_state["data_source"] = "default"
 
-df = st.session_state["uploaded_df"]
+df = st.session_state["uploaded_df"].copy()
 
 if st.session_state.get("data_source") == "default":
     st.info("Showing results from default Online Retail dataset. Upload your own CSV on the Upload page.")
@@ -29,45 +29,58 @@ else:
 
 st.markdown("---")
 
-# Algorithm selector
-algo = st.radio("Select Algorithm", ["Apriori", "FP-Growth"], horizontal=True)
+# Algorithm and support settings
+col1, col2 = st.columns([1, 2])
 
-# Support slider
-min_support = st.slider(
-    "Minimum Support",
-    min_value=0.01,
-    max_value=0.1,
-    value=0.02,
-    step=0.01,
-    help="How often an itemset must appear across all baskets. Lower = more rules but slower."
-)
+with col1:
+    algo = st.radio(
+        "Select Algorithm",
+        ["Apriori", "FP-Growth"],
+        help="Apriori is classic. FP-Growth is faster on large datasets."
+    )
 
-@st.cache_data(show_spinner=False)
-def run_analysis(data_hash, algo, min_support):
-    # Build basket matrix
+with col2:
+    min_support = st.slider(
+        "Minimum Support",
+        min_value=0.01,
+        max_value=0.1,
+        value=0.02,
+        step=0.01,
+        help="How often an itemset must appear across all baskets. Lower = more rules but slower."
+    )
+
+st.markdown("---")
+
+# Run analysis function — takes df directly, no cache issues
+def run_analysis(data, algo, min_support):
     basket = (
-        df.groupby(["InvoiceNo", "Description"])["Quantity"]
+        data.groupby(["InvoiceNo", "Description"])["Quantity"]
         .sum()
         .unstack()
         .fillna(0)
     )
     basket_sets = basket > 0
 
-    # Run selected algorithm
     if algo == "Apriori":
         frequent_itemsets = apriori(
-            basket_sets, min_support=min_support, use_colnames=True
+            basket_sets,
+            min_support=min_support,
+            use_colnames=True
         )
     else:
         frequent_itemsets = fpgrowth(
-            basket_sets, min_support=min_support, use_colnames=True
+            basket_sets,
+            min_support=min_support,
+            use_colnames=True
         )
 
     if len(frequent_itemsets) == 0:
         return None
 
     rules = association_rules(
-        frequent_itemsets, metric="lift", min_threshold=1.0
+        frequent_itemsets,
+        metric="lift",
+        min_threshold=1.0
     )
     rules = rules.sort_values("lift", ascending=False)
 
@@ -80,10 +93,9 @@ def run_analysis(data_hash, algo, min_support):
     )
     return rules
 
-# Run analysis with spinner
+# Run with spinner
 with st.spinner(f"Running {algo}... this may take 20-40 seconds on large datasets"):
-    data_hash = str(len(df)) + algo + str(min_support)
-    rules = run_analysis(data_hash, algo, min_support)
+    rules = run_analysis(df, algo, min_support)
 
 if rules is None:
     st.warning("No rules found. Try lowering the minimum support value.")
@@ -105,7 +117,7 @@ else:
         value=1.0,
         step=0.5
     )
-    filtered = rules[rules["lift"] >= min_lift]
+    filtered = rules[rules["lift"] >= min_lift].copy()
     st.write(f"Showing {len(filtered)} rules with lift ≥ {min_lift}")
 
     # Rules table
@@ -121,9 +133,11 @@ else:
     top10["rule"] = top10["antecedents"] + " → " + top10["consequents"]
     st.bar_chart(top10.set_index("rule")["lift"])
 
+    st.markdown("---")
+
     # Download
     st.download_button(
-        label="Download Rules as CSV",
+        label="⬇ Download Rules as CSV",
         data=filtered.to_csv(index=False).encode("utf-8"),
         file_name="association_rules.csv",
         mime="text/csv"
