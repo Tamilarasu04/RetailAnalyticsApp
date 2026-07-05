@@ -13,7 +13,7 @@ def check_login():
     with st.sidebar:
         st.markdown(f"Logged in as: **{st.session_state.current_user}**")
         st.markdown("---")
-        if st.button("Logout"):
+        if st.button("Logout", key=f"logout_{__name__}"):
             st.session_state.logged_in = False
             st.session_state.current_user = ""
-            st.rerun()
+            st.switch_page("Home.py")

@@ -50,7 +50,6 @@ if not st.session_state.logged_in:
             padding-bottom: 0 !important;
             max-width: 100% !important;
         }
-
         .stTabs [data-baseweb="tab-list"] {
             background: rgba(255,255,255,0.04) !important;
             border-radius: 12px !important;
@@ -130,14 +129,9 @@ body {
     color: white;
 }
 .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: rgba(79,139,249,0.1);
-    border: 1px solid rgba(79,139,249,0.25);
-    border-radius: 30px;
-    padding: 0.4rem 1rem;
-    margin-bottom: 2rem;
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: rgba(79,139,249,0.1); border: 1px solid rgba(79,139,249,0.25);
+    border-radius: 30px; padding: 0.4rem 1rem; margin-bottom: 2rem;
 }
 .badge-dot { width: 8px; height: 8px; background: #4F8BF9; border-radius: 50%; }
 .badge-text { color: #4F8BF9; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -185,8 +179,8 @@ h1 span { background: linear-gradient(135deg, #4F8BF9, #a78bfa); -webkit-backgro
         st.markdown("<div style='height:10vh'></div>", unsafe_allow_html=True)
         st.markdown("""<div style="text-align:center;margin-bottom:2rem;">
 <div style="width:58px;height:58px;background:linear-gradient(135deg,#4F8BF9,#7B5CF5);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:1rem;box-shadow:0 8px 25px rgba(79,139,249,0.35);">📊</div>
-<h2 style="color:#FFFFFF;font-size:1.6rem;font-weight:700;margin:0;">Welcome back</h2>
-<p style="color:#718096;font-size:0.875rem;margin:0.4rem 0 0 0;">Sign in to your analytics dashboard</p>
+<h2 style="color:#FFFFFF;font-size:1.6rem;font-weight:700;margin:0;">Retail Analytics Platform</h2>
+<p style="color:#718096;font-size:0.875rem;margin:0.4rem 0 0 0;">Sign in or create an account to get started</p>
 </div>""", unsafe_allow_html=True)
 
         tab1, tab2 = st.tabs(["🔑   Login", "✨   Sign Up"])
@@ -266,4 +260,4 @@ with st.sidebar:
     if st.button("Logout"):
         st.session_state.logged_in = False
         st.session_state.current_user = ""
-        st.rerun()
+        st.switch_page("Home.py")
