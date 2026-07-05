@@ -41,12 +41,17 @@ total_customers = df["CustomerID"].nunique()
 avg_order_value = total_revenue / total_orders
 total_products = df["Description"].nunique()
 
-col1, col2, col3, col4, col5 = st.columns(5)
-col1.metric("Total Revenue", f"£{total_revenue:,.0f}")
-col2.metric("Total Orders", f"{total_orders:,}")
-col3.metric("Total Customers", f"{total_customers:,}")
-col4.metric("Avg Order Value", f"£{avg_order_value:,.2f}")
-col5.metric("Unique Products", f"{total_products:,}")
+# Row 1
+col1, col2, col3 = st.columns(3)
+col1.metric("💰 Total Revenue", f"£{total_revenue:,.0f}")
+col2.metric("📦 Total Orders", f"{total_orders:,}")
+col3.metric("👥 Total Customers", f"{total_customers:,}")
+
+# Row 2
+col4, col5, col6 = st.columns(3)
+col4.metric("🛒 Avg Order Value", f"£{avg_order_value:,.2f}")
+col5.metric("🏷️ Unique Products", f"{total_products:,}")
+col6.metric("🌍 Countries", f"{df['Country'].nunique():,}")
 
 st.markdown("---")
 
