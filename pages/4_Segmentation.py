@@ -12,7 +12,7 @@ from style import apply_styles, page_header
 
 apply_styles()
 check_login()
-
+st.set_page_config(page_title="Customer Segmentation", layout="wide")
 page_header("Customer Segmentation", "RFM scoring with KMeans clustering")
 st.markdown("---")
 

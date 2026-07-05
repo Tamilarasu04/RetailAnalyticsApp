@@ -9,7 +9,7 @@ from style import apply_styles, page_header
 
 apply_styles()
 check_login()
-
+st.set_page_config(page_title="Sales Dashboard", layout="wide")
 page_header("Sales Dashboard", "Real-time retail performance metrics")
 st.markdown("---")
 

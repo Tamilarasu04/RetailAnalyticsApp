@@ -9,7 +9,7 @@ from style import apply_styles, page_header
 
 apply_styles()
 check_login()
-
+st.set_page_config(page_title="Market Basket Analysis", layout="wide")
 page_header("Market Basket Analysis", "Association rules mined using Apriori & FP-Growth")
 st.markdown("---")
 

@@ -9,7 +9,7 @@ from style import apply_styles, page_header
 
 apply_styles()
 check_login()
-
+st.set_page_config(page_title="Upload Data", layout="wide")
 page_header("Upload Data", "Upload any retail transaction CSV — we'll figure out the columns")
 st.markdown("---")
 
